@@ -1,9 +1,9 @@
-from addressbook import AddressBook
+from addressbook import AddressBook, load_data, save_data
 from assistant_bot import add_birthday, parse_input, change_contact, show_all, show_birthday, add_contact, show_phone, birthdays
 
 
 def main():
-    book = AddressBook()
+    book = load_data()
     print("Welcome to the assistant bot!")
 
     while True:
@@ -17,7 +17,10 @@ def main():
 
         match command:
             case "close" | "exit":
+                print("Saving your address book...")
+                save_data(book)
                 print("Good bye!")
+
                 break
             case "hello":
                 print("How can I help you?")
@@ -37,7 +40,7 @@ def main():
                 print(birthdays(args, book))
             case _:
                 print("Invalid command.")
-
+        
 
 if __name__ == "__main__":
     main()
