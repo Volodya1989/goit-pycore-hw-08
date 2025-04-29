@@ -1,5 +1,6 @@
 from collections import UserDict
 from datetime import date, timedelta, datetime
+import pickle
 
 
 class AddressBook(UserDict):
@@ -17,12 +18,11 @@ class AddressBook(UserDict):
         today = date.today()
         for record in self.data.values():
             if record.birthday:
-                # Parse the birthday string into a date object
                 try:
                     bday = datetime.strptime(
                         record.birthday.value, "%d.%m.%Y").date()
                 except ValueError:
-                    continue  # Skip if the date is invalid
+                    continue
 
                 birthday_this_year = bday.replace(year=today.year)
 
@@ -42,3 +42,16 @@ class AddressBook(UserDict):
                         "birthday": birthday_this_year.strftime("%d.%m.%Y")
                     })
         return upcoming
+
+
+def save_data(book, filename="addressbook.pkl"):
+    with open(filename, "wb") as f:
+        pickle.dump(book, f)
+
+
+def load_data(filename="addressbook.pkl"):
+    try:
+        with open(filename, "rb") as f:
+            return pickle.load(f)
+    except FileNotFoundError:
+        return AddressBook()
